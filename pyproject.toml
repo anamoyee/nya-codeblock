@@ -1,18 +1,18 @@
 [project]
-name = 'nya-codeblock'
-dynamic = ['version']
-description = 'Provide helpful functions to convert str into a markdown/discord codeblock. Ported from my own package, tcrutils.'
-readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
-
-# [project.scripts]
-# nya_codeblock = "nya_codeblock.__main__:main"
+name            = 'nya-codeblock'
+dynamic         = ['version']
+description     = 'Provide helpful functions to convert str into a markdown/discord codeblock. Ported from my own package, tcrutils.'
+readme          = "README.md"
+requires-python = ">=3.11"
+dependencies    = []
 
 [build-system]
-requires = ["hatchling"]
+requires      = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-path = "src/nya_codeblock/_version.py"
+path    = "src/nya_codeblock/_version.py"
 pattern = '__version__(?:: str)? *= *\"(?P<version>[^\"]+)\"'
+
+[dependency-groups]
+dev = ["pytest>=9.1.1"]
