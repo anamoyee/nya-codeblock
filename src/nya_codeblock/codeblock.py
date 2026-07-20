@@ -1,5 +1,7 @@
 from collections.abc import Callable
 
+from nya_extract_error import extract_error, extract_traceback
+
 BACKTICK = "`"
 BACKTICKS = 3 * BACKTICK
 NEWLINE = "\n"
@@ -62,7 +64,7 @@ def codeblock(
 
 
 def codeblocks(
-	text0: str,
+	text: str,
 	*texts: str,
 	langcodes: tuple[str, ...] | None = None,
 	max_length: int = 1984,
@@ -70,12 +72,15 @@ def codeblocks(
 	smart_empty: bool = True,
 	convert_three_backticks_to_apostrophes: bool = False,
 ) -> str:
-	r"""Mutliple-`codeblock()`. For more info read codeblock() docstring.
+	r"""Mutliple-`codeblock()`. For more info read `codeblock()` docstring.
+
+	!!! ⚠️ Warning
+		Max length is not guaranteed to be respected, since this is doing codeblock() in a loop, and the lowest amount of characters that can be returned is `((7 + len(langcode)) := len(`"```{langcode}\n```"`)) * len((text, *texts))`, therefore it can overflow max_length by this amount. Set a more conservative max_length or do further processing like a hard cutoff (`output[:2000]`) (breaks formatting, but can be acceptable if doesnt triggerr in 99.9% of cases), or fork/compose this function if you need more control.
 
 	Args:
-		text0: The first text to put in the codeblock body.
+		text: The first text to put in the codeblock body.
 		*texts: The rest of the texts to put in the codeblock body.
-		langcodes: The language codes to use in discord codeblock, for example "py". If None, all langcodes will be empty strings. If provided, must be of same length as the total amount of texts passed in including text0.
+		langcodes: The language codes to use in discord codeblock, for example "py". If None, all langcodes will be empty strings. If provided, must be of same length as the total amount of all texts passed in (by all texts here i mean `(text, *texts)`).
 		max_length: The maximum length of the output str.
 		fn_cut_at: A Callable[[str, int], str] which's returned string is of or less than the passed in int in length.
 		smart_empty: If true, if `text` is '' (an empty string) it will be changed to ' ' (a space). This prevents the codeblock to think langcode is the body of the codeblock if no text is supplied.
@@ -83,7 +88,7 @@ def codeblocks(
 	Returns:
 		str: A str of the form ```langcode\ntext``` with a length of or less than max_length.
 	"""
-	texts = text0, *texts
+	texts = text, *texts
 
 	if langcodes is None:
 		langcodes: tuple[str, ...] = ("",) * len(texts)

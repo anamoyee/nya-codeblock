@@ -4,7 +4,10 @@ dynamic         = ['version']
 description     = 'Provide helpful functions to convert str into a markdown/discord codeblock. Ported from my own package, tcrutils.'
 readme          = "README.md"
 requires-python = ">=3.11"
-dependencies    = []
+
+dependencies = [ #
+	"nya-extract-error>=0.1.0",
+]
 
 [build-system]
 requires      = ["hatchling"]
